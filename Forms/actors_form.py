@@ -2,12 +2,16 @@
 Name:         Roger Silva Santos Aguiar
 Function:     This class creates a form for actors table
 Initial date: November 10, 2020
-Last update:  November 11, 2020 
+Last update:  November 12, 2020 
 """
 
 from tkinter import *
+from tkinter import messagebox
+import database_operations_for_actors
 
 class ActorsForm():
+    operations = database_operations_for_actors.Actors()
+
     def __init__(self, actors_table):        
         self.actors_table = self.create_actors_form(actors_table)
         self.create_controls()
@@ -26,7 +30,7 @@ class ActorsForm():
 
     def create_buttons(self):
         self.add_actor = Button(self.actors_table, text = "Add actor", width = 10, command = self.add_actor_click)
-        self.register = Button(self.actors_table, text = "Register", width = 10)
+        self.register = Button(self.actors_table, text = "Register", width = 10, command = self.insert)
         self.update = Button(self.actors_table, text = "Update", width = 10)
         self.delete = Button(self.actors_table, text = "Delete", width = 10)
         self.previous = Button(self.actors_table, text = "Previous", width = 27)
@@ -88,6 +92,22 @@ class ActorsForm():
         self.register_date_entry.delete(0, END)
         self.last_update_entry.delete(0, END)
         self.actor_entry.focus()
+
+    # Functions
+
+    def insert(self):
+        actor = self.actor_entry.get()
+        imdb_link = self.imdb_link_entry.get()
+        credits = int(self.credits_entry.get())
+        register_date = self.register_date_entry.get()
+        last_update = self.last_update_entry.get()
+
+        values = (actor, imdb_link, credits, register_date, last_update)
+
+        self.operations.insert(values)
+
+        messagebox.showinfo("Information", "Operation has been completed!")
+       
 
 actors_table = Tk()
 ActorsForm(actors_table)
