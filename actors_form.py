@@ -16,6 +16,7 @@ class ActorsForm():
         self.put_controls_on_screen()
         self.mydb = database_config.DatabaseConnection.my_connection()
         self.database = self.mydb.cursor()
+        self.load_row()
 
     def create_actors_form(self, actors_table):
         actors_table.title("Actors")
@@ -30,7 +31,7 @@ class ActorsForm():
 
     def create_buttons(self):
         self.add_actor = Button(self.actors_table, text = "Add actor", width = 10, command = self.add_actor_click)
-        self.register = Button(self.actors_table, text = "Register", width = 10, command = self.insert)
+        self.register = Button(self.actors_table, text = "Register", width = 10, command = self.insert_row)
         self.update = Button(self.actors_table, text = "Update", width = 10)
         self.delete = Button(self.actors_table, text = "Delete", width = 10)
         self.previous = Button(self.actors_table, text = "Previous", width = 27)
@@ -95,14 +96,14 @@ class ActorsForm():
 
     # Functions
 
-    def insert(self):
+    def insert_row(self):
         actor = self.actor_entry.get()
         imdb_link = self.imdb_link_entry.get()
         credits = int(self.credits_entry.get())
         register_date = self.register_date_entry.get()
         last_update = self.last_update_entry.get()
 
-        values = (actor, imdb_link, credits, register_date, last_update)
+        values = (actor, imdb_link, credits, register_date, last_update)       
         
         sql = "INSERT INTO actors (actor, imdb_link, credits, register_date, last_update) " \
               "VALUES (%s, %s, %s, %s, %s)"
@@ -112,7 +113,27 @@ class ActorsForm():
 
         messagebox.showinfo("Information", "Operation has been completed!")
        
+    def load_row(self):
+        sql = 'SELECT * FROM actors'        
+        self.database.execute(sql)
+        table = self.database.fetchall()
 
-actors_table = Tk()
-ActorsForm(actors_table)
-actors_table.mainloop()
+        self.id_actor_entry.insert(0, table[0][0])
+        self.actor_entry.insert(0, table[0][1])
+        self.imdb_link_entry.insert(0, table[0][2])
+        self.credits_entry.insert(0, table[0][3])
+        self.register_date_entry.insert(0, table[0][4])
+        # self.last_update_entry.insert(0, table[0][5])
+
+        # print(type(table))
+        # print(table[1][1])
+
+    def update_row(self):
+        pass
+
+if __name__ == "__main__":
+    actors_table = Tk()
+    # run = ActorsForm(actors_table)
+    # run.load_row()
+    ActorsForm(actors_table)
+    actors_table.mainloop()
