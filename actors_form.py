@@ -96,6 +96,13 @@ class ActorsForm():
 
     # Functions
 
+    def clear_textboxes(self):
+        self.actor_entry.delete(0, END)
+        self.imdb_link_entry.delete(0, END)
+        self.credits_entry.delete(0, END)
+        self.register_date_entry.delete(0, END)
+        self.last_update_entry.delete(0, END)
+
     def insert_row(self):
         actor = self.actor_entry.get()
         imdb_link = self.imdb_link_entry.get()
@@ -112,6 +119,8 @@ class ActorsForm():
         self.mydb.commit()
 
         messagebox.showinfo("Information", "Operation has been completed!")
+        self.clear_textboxes()
+        self.load_row()
        
     def load_row(self):
         sql = 'SELECT * FROM actors'        
