@@ -137,6 +137,9 @@ class ActorsForm():
             self.credits_entry.insert(0, table[self.row_index][3])
             self.register_date_entry.insert(0, table[self.row_index][4])
 
+            if table[self.row_index][5] != None:
+                self.last_update_entry.insert(0, table[self.row_index][5])
+
     def go_to_previous_row(self):
         if self.row_index > 0:
             self.clear_textboxes()
@@ -149,6 +152,9 @@ class ActorsForm():
             self.credits_entry.insert(0, table[self.row_index][3])
             self.register_date_entry.insert(0, table[self.row_index][4])
 
+            if table[self.row_index][5] != None:
+                self.last_update_entry.insert(0, table[self.row_index][5])
+
     def load_row(self):
         global table
         sql = 'SELECT * FROM actors'        
@@ -160,11 +166,10 @@ class ActorsForm():
         self.imdb_link_entry.insert(0, table[0][2])
         self.credits_entry.insert(0, table[0][3])
         self.register_date_entry.insert(0, table[0][4])
-        # self.last_update_entry.insert(0, table[0][5])
 
-        # print(type(table))
-        # print(table[1][1])
-
+        if table[0][5] != None:
+            self.last_update_entry.insert(0, table[0][5])
+        
     def update_row(self):
         pass
 
