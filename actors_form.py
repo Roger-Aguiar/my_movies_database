@@ -2,7 +2,7 @@
 Name:         Roger Silva Santos Aguiar
 Function:     This class creates a form for actors table
 Initial date: November 10, 2020
-Last update:  November 13, 2020 
+Last update:  November 16, 2020 
 """
 
 from tkinter import *
@@ -10,6 +10,8 @@ from tkinter import messagebox
 from Database import database_config
 
 class ActorsForm():    
+    row_index = 0
+
     def __init__(self, actors_table):        
         self.actors_table = self.create_actors_form(actors_table)
         self.create_controls()
@@ -34,8 +36,8 @@ class ActorsForm():
         self.register = Button(self.actors_table, text = "Register", width = 10, command = self.insert_row)
         self.update = Button(self.actors_table, text = "Update", width = 10)
         self.delete = Button(self.actors_table, text = "Delete", width = 10)
-        self.previous = Button(self.actors_table, text = "Previous", width = 27)
-        self.next = Button(self.actors_table, text = "Next", width = 27)
+        self.previous = Button(self.actors_table, text = "Previous", width = 27, command = self.go_to_previous_row)
+        self.next = Button(self.actors_table, text = "Next", width = 27, command = self.go_to_next_row)
         self.close = Button(self.actors_table, text = "Close", width = 62)
 
     def create_labels(self):
@@ -97,6 +99,7 @@ class ActorsForm():
     # Functions
 
     def clear_textboxes(self):
+        self.id_actor_entry.delete(0, END)
         self.actor_entry.delete(0, END)
         self.imdb_link_entry.delete(0, END)
         self.credits_entry.delete(0, END)
@@ -122,7 +125,32 @@ class ActorsForm():
         self.clear_textboxes()
         self.load_row()
        
+    def go_to_next_row(self):
+        if self.row_index < len(table) - 1:
+            self.clear_textboxes()
+
+            self.row_index+= 1
+
+            self.id_actor_entry.insert(0, table[self.row_index][0])
+            self.actor_entry.insert(0, table[self.row_index][1])
+            self.imdb_link_entry.insert(0, table[self.row_index][2])
+            self.credits_entry.insert(0, table[self.row_index][3])
+            self.register_date_entry.insert(0, table[self.row_index][4])
+
+    def go_to_previous_row(self):
+        if self.row_index > 0:
+            self.clear_textboxes()
+
+            self.row_index-= 1
+
+            self.id_actor_entry.insert(0, table[self.row_index][0])
+            self.actor_entry.insert(0, table[self.row_index][1])
+            self.imdb_link_entry.insert(0, table[self.row_index][2])
+            self.credits_entry.insert(0, table[self.row_index][3])
+            self.register_date_entry.insert(0, table[self.row_index][4])
+
     def load_row(self):
+        global table
         sql = 'SELECT * FROM actors'        
         self.database.execute(sql)
         table = self.database.fetchall()
