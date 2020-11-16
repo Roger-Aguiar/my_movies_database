@@ -5,9 +5,10 @@ Initial date: November 10, 2020
 Last update:  November 16, 2020 
 """
 
+from Database import database_config
+from datetime import date
 from tkinter import *
 from tkinter import messagebox
-from Database import database_config
 
 class ActorsForm():    
     row_index = 0
@@ -94,7 +95,11 @@ class ActorsForm():
         self.credits_entry.delete(0, END)
         self.register_date_entry.delete(0, END)
         self.last_update_entry.delete(0, END)
+        
         self.actor_entry.focus()
+
+        self.register_date_entry.insert(0, date.today())
+        self.last_update_entry.insert(0, date.today())
 
     # Functions
 
