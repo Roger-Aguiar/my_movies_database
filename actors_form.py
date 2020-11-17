@@ -220,8 +220,6 @@ class ActorsForm():
         self.load_row()
 
 if __name__ == "__main__":
-    actors_table = Tk()
-    # run = ActorsForm(actors_table)
-    # run.load_row()
+    actors_table = Tk()    
     ActorsForm(actors_table)
     actors_table.mainloop()
