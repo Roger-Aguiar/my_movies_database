@@ -36,7 +36,7 @@ class ActorsForm():
         self.add_actor = Button(self.actors_table, text = "Add actor", width = 10, command = self.add_actor_click)
         self.register = Button(self.actors_table, text = "Register", width = 10, command = self.insert_row)
         self.update = Button(self.actors_table, text = "Update", width = 10, command = self.update_row)
-        self.delete = Button(self.actors_table, text = "Delete", width = 10)
+        self.delete = Button(self.actors_table, text = "Delete", width = 10, command = self.delete_row)
         self.previous = Button(self.actors_table, text = "Previous", width = 27, command = self.go_to_previous_row)
         self.next = Button(self.actors_table, text = "Next", width = 27, command = self.go_to_next_row)
         self.close = Button(self.actors_table, text = "Close", width = 62)
@@ -116,6 +116,18 @@ class ActorsForm():
         self.id_actor_entry.configure(state = 'disabled')
         self.register_date_entry.configure(state = 'disabled')
         self.last_update_entry.configure(state = 'disabled')
+
+    def delete_row(self):     
+        sql = "DELETE FROM actors WHERE id_actor = %s"     
+
+        self.database.execute(sql, [self.id_actor_entry.get()])
+        self.mydb.commit()
+
+        messagebox.showinfo("Information", "The row was successfully deleted!")
+
+        self.configure_text_box_state_to_normal()
+        self.clear_textboxes()
+        self.load_row()
 
     def insert_row(self):
         actor = self.actor_entry.get()
