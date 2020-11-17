@@ -39,7 +39,7 @@ class ActorsForm():
         self.delete = Button(self.actors_table, text = "Delete", width = 10, command = self.delete_row)
         self.previous = Button(self.actors_table, text = "Previous", width = 27, command = self.go_to_previous_row)
         self.next = Button(self.actors_table, text = "Next", width = 27, command = self.go_to_next_row)
-        self.close = Button(self.actors_table, text = "Close", width = 62)
+        self.close = Button(self.actors_table, text = "Close", width = 62, command = self.actors_table.destroy)
 
     def create_labels(self):
         self.id_actor = Label(self.actors_table, text = "Id actor: ")
