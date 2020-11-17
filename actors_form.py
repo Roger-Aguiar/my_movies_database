@@ -2,7 +2,7 @@
 Name:         Roger Silva Santos Aguiar
 Function:     This class creates a form for actors table
 Initial date: November 10, 2020
-Last update:  November 16, 2020 
+Last update:  November 17, 2020 
 """
 
 from Database import database_config
@@ -35,7 +35,7 @@ class ActorsForm():
     def create_buttons(self):
         self.add_actor = Button(self.actors_table, text = "Add actor", width = 10, command = self.add_actor_click)
         self.register = Button(self.actors_table, text = "Register", width = 10, command = self.insert_row)
-        self.update = Button(self.actors_table, text = "Update", width = 10)
+        self.update = Button(self.actors_table, text = "Update", width = 10, command = self.update_row)
         self.delete = Button(self.actors_table, text = "Delete", width = 10)
         self.previous = Button(self.actors_table, text = "Previous", width = 27, command = self.go_to_previous_row)
         self.next = Button(self.actors_table, text = "Next", width = 27, command = self.go_to_next_row)
@@ -149,9 +149,7 @@ class ActorsForm():
             self.imdb_link_entry.insert(0, table[self.row_index][2])
             self.credits_entry.insert(0, table[self.row_index][3])
             self.register_date_entry.insert(0, table[self.row_index][4])
-
-            if table[self.row_index][5] != None:
-                self.last_update_entry.insert(0, table[self.row_index][5])
+            self.last_update_entry.insert(0, table[self.row_index][5])
 
             self.configure_text_box_state_to_read_only()
             
@@ -167,9 +165,7 @@ class ActorsForm():
             self.imdb_link_entry.insert(0, table[self.row_index][2])
             self.credits_entry.insert(0, table[self.row_index][3])
             self.register_date_entry.insert(0, table[self.row_index][4])
-
-            if table[self.row_index][5] != None:
-                self.last_update_entry.insert(0, table[self.row_index][5])
+            self.last_update_entry.insert(0, table[self.row_index][5])
 
             self.configure_text_box_state_to_read_only()
 
@@ -185,15 +181,31 @@ class ActorsForm():
         self.actor_entry.insert(0, table[0][1])
         self.imdb_link_entry.insert(0, table[0][2])
         self.credits_entry.insert(0, table[0][3])
-        self.register_date_entry.insert(0, table[0][4])
-
-        if table[0][5] != None:
-            self.last_update_entry.insert(0, table[0][5])
+        self.register_date_entry.insert(0, table[0][4])        
+        self.last_update_entry.insert(0, table[0][5])
         
         self.configure_text_box_state_to_read_only()
         
-    def update_row(self):
-        pass
+    def update_row(self): 
+        id_actor = self.id_actor_entry.get()              
+        actor = self.actor_entry.get()
+        imdb_link = self.imdb_link_entry.get()
+        credits = int(self.credits_entry.get())        
+        last_update = date.today()
+
+        values = (actor, imdb_link, credits, last_update, id_actor)
+        
+        sql = "UPDATE actors SET actor = %s, imdb_link = %s, credits = %s, last_update = %s " \
+              "WHERE id_actor = %s"
+
+        self.database.execute(sql, values)
+        self.mydb.commit()
+
+        messagebox.showinfo("Information", "The row was successfully updated!")
+
+        self.configure_text_box_state_to_normal()
+        self.clear_textboxes()
+        self.load_row()
 
 if __name__ == "__main__":
     actors_table = Tk()
