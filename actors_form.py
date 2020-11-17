@@ -89,27 +89,33 @@ class ActorsForm():
 
     # Events
     def add_actor_click(self):
-        self.id_actor_entry.delete(0, END)
-        self.actor_entry.delete(0, END)
-        self.imdb_link_entry.delete(0, END)
-        self.credits_entry.delete(0, END)
-        self.register_date_entry.delete(0, END)
-        self.last_update_entry.delete(0, END)
-        
-        self.actor_entry.focus()
-
+        self.configure_text_box_state_to_normal()
+        self.clear_textboxes()
+               
         self.register_date_entry.insert(0, date.today())
         self.last_update_entry.insert(0, date.today())
 
     # Functions
 
-    def clear_textboxes(self):
+    def clear_textboxes(self):        
         self.id_actor_entry.delete(0, END)
         self.actor_entry.delete(0, END)
         self.imdb_link_entry.delete(0, END)
         self.credits_entry.delete(0, END)
         self.register_date_entry.delete(0, END)
         self.last_update_entry.delete(0, END)
+
+        self.actor_entry.focus()
+
+    def configure_text_box_state_to_normal(self):
+        self.id_actor_entry.configure(state = 'normal')
+        self.register_date_entry.configure(state = 'normal')
+        self.last_update_entry.configure(state = 'normal')
+
+    def configure_text_box_state_to_read_only(self):
+        self.id_actor_entry.configure(state = 'disabled')
+        self.register_date_entry.configure(state = 'disabled')
+        self.last_update_entry.configure(state = 'disabled')
 
     def insert_row(self):
         actor = self.actor_entry.get()
@@ -132,11 +138,13 @@ class ActorsForm():
        
     def go_to_next_row(self):
         if self.row_index < len(table) - 1:
+            self.configure_text_box_state_to_normal()            
             self.clear_textboxes()
 
-            self.row_index+= 1
-
+            self.row_index+= 1            
+            
             self.id_actor_entry.insert(0, table[self.row_index][0])
+            self.id_actor_entry.configure(state = 'disable')
             self.actor_entry.insert(0, table[self.row_index][1])
             self.imdb_link_entry.insert(0, table[self.row_index][2])
             self.credits_entry.insert(0, table[self.row_index][3])
@@ -145,8 +153,11 @@ class ActorsForm():
             if table[self.row_index][5] != None:
                 self.last_update_entry.insert(0, table[self.row_index][5])
 
+            self.configure_text_box_state_to_read_only()
+            
     def go_to_previous_row(self):
         if self.row_index > 0:
+            self.configure_text_box_state_to_normal()
             self.clear_textboxes()
 
             self.row_index-= 1
@@ -160,11 +171,15 @@ class ActorsForm():
             if table[self.row_index][5] != None:
                 self.last_update_entry.insert(0, table[self.row_index][5])
 
+            self.configure_text_box_state_to_read_only()
+
     def load_row(self):
         global table
         sql = 'SELECT * FROM actors'        
         self.database.execute(sql)
         table = self.database.fetchall()
+
+        self.configure_text_box_state_to_normal()
 
         self.id_actor_entry.insert(0, table[0][0])
         self.actor_entry.insert(0, table[0][1])
@@ -174,6 +189,8 @@ class ActorsForm():
 
         if table[0][5] != None:
             self.last_update_entry.insert(0, table[0][5])
+        
+        self.configure_text_box_state_to_read_only()
         
     def update_row(self):
         pass
